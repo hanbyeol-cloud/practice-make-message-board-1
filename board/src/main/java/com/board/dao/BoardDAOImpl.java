@@ -1,5 +1,6 @@
 package com.board.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,14 +19,12 @@ public class BoardDAOImpl implements BoardDAO {
 	private static String namespace = "com.board.mappers.board";
 	
 	// 게시물 목록
-	@Override
 	public List<BoardVO> list() throws Exception {
 
 		return sql.selectList(namespace + ".list");
 	}
 
 	// 게시물 작성
-	@Override
 	public void write(BoardVO vo) throws Exception {
 		
 		sql.insert(namespace + ".write", vo);
@@ -38,9 +37,32 @@ public class BoardDAOImpl implements BoardDAO {
 		return sql.selectOne(namespace + ".view", bno);
 	}
 	
-	@Override
+	//게시물 수정
 	public void modify(BoardVO vo) throws Exception {
 		
 		sql.update(namespace + ".modify", vo);
 	}
+
+	//게시물 삭제
+	public void delete(int bno) throws Exception {
+		sql.delete(namespace + ".delete", bno);
+		
+	}
+
+	//게시물 총 개수
+	public int count() throws Exception {
+		return sql.selectOne(namespace + ".count");
+	}
+
+	@Override
+	public List listPage(int displayPost, int postNum) throws Exception {
+
+		HashMap data = new HashMap();
+		
+		data.put("displayPost", displayPost);
+		data.put("postNum", postNum);
+		
+		return sql.selectList(namespace + ".listPage", data);
+	}
+	
 }
