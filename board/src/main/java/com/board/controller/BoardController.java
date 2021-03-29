@@ -147,5 +147,37 @@ public class BoardController {
 		 * // 현재 페이지 model.addAttribute("select", num);
 		 */
 	}
+	
+	// 게시물 목록 + 페이징 추가 + 검색
+		@RequestMapping(value = "/listPageSearch", method = RequestMethod.GET)
+		public void getListPageSearch(Model model, @RequestParam("num") int num,
+				@RequestParam(value="searchType", required = false, defaultValue = "title") String searchType,
+				@RequestParam(value="keyword", required = false, defaultValue="") String keyword)
+				throws Exception {
+
+			Page page = new Page();
+			
+			page.setNum(num);
+			
+			//page.setCount(service.count());
+			page.setCount(service.searchCount(searchType, keyword));
+			
+			// 검색 타입과 검색어
+			//page.setSearchTypeKeyword(searchType, keyword);
+			page.setSearchType(searchType);
+			page.setKeyword(keyword);
+			
+			List<BoardVO> list = null;
+			//list = service.listPage(page.getDispalyPost(), page.getPostNum());
+			list = service.listPageSearch(page.getDispalyPost(), page.getPostNum(),
+					searchType, keyword);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("page", page);
+			model.addAttribute("select", num);
+			
+			//model.addAttribute("searchType", searchType);
+			//model.addAttribute("keyword", keyword);
+		}
 
 }
